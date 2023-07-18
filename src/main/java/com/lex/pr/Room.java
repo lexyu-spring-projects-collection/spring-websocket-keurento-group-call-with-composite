@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.CountDownLatch;
 
 public class Room implements Closeable {
 	private final Logger log = LoggerFactory.getLogger(Room.class);
@@ -63,12 +64,9 @@ public class Room implements Closeable {
 					.build();
 
 			this.recorderVideoEndpoint = new RecorderEndpoint.Builder(this.pipeline,
-					RECORDING_PATH + "-" + name + "-video" + ".webm")
-					.withMediaProfile(MediaProfileSpecType.WEBM_VIDEO_ONLY)
+					RECORDING_PATH + "-" + name + "-video" + ".mp4")
+					.withMediaProfile(MediaProfileSpecType.MP4_VIDEO_ONLY)
 					.build();
-
-//			recorderAudioEndpoint.setMinEncoderBitrate();
-			recorderAudioEndpoint.setMaxEncoderBitrate(0);
 
 			this.compositeOutputHubport.connect(this.recorderAudioEndpoint);
 

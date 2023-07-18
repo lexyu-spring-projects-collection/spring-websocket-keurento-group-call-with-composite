@@ -67,8 +67,9 @@
             var MEDIA_CONSTRAINTS = {
                 audio: true,
                 video: {
-                    width: 640,
-                    framerate: 15
+                    width: 1280,
+                    height: 720,
+                    framerate: 30
                 }
             };
             var ua = typeof window !== 'undefined' && window.navigator ? window.navigator.userAgent : '';

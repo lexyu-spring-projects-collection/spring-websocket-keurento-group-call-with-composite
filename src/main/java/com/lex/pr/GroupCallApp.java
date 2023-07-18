@@ -30,7 +30,7 @@ public class GroupCallApp implements WebSocketConfigurer {
   }
 
   @Bean
-  public KurentoClient kurentoClient() {
+  public KurentoClient kurentoClientLocal() {
     return KurentoClient.create();
   }
 
