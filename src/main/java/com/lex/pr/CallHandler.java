@@ -14,6 +14,8 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.io.IOException;
 
+import static com.lex.pr.RoomManager.rooms;
+
 public class CallHandler extends TextWebSocketHandler {
 
   private static final Logger log = LoggerFactory.getLogger(CallHandler.class);
@@ -29,7 +31,6 @@ public class CallHandler extends TextWebSocketHandler {
   @Override
   public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
     final JsonObject jsonMessage = gson.fromJson(message.getPayload(), JsonObject.class);
-
     final UserSession user = registry.getBySession(session);
 
     if (user != null) {
@@ -50,6 +51,12 @@ public class CallHandler extends TextWebSocketHandler {
         break;
       case "leaveRoom":
         leaveRoom(user);
+        break;
+      case "startRecord":
+        rooms.get(jsonMessage.get("room").getAsString()).start_record();
+        break;
+      case "stopRecord":
+        rooms.get(jsonMessage.get("room").getAsString()).stop_record(jsonMessage.get("name").getAsString());
         break;
       case "onIceCandidate":
         JsonObject candidate = jsonMessage.get("candidate").getAsJsonObject();
@@ -74,6 +81,7 @@ public class CallHandler extends TextWebSocketHandler {
   private void joinRoom(JsonObject params, WebSocketSession session) throws IOException {
     final String roomName = params.get("room").getAsString();
     final String name = params.get("name").getAsString();
+//    final boolean isRecording = params.get("disable_record").getAsBoolean();
     log.info("PARTICIPANT {}: trying to join room {}", name, roomName);
 
     Room room = roomManager.getRoom(roomName);

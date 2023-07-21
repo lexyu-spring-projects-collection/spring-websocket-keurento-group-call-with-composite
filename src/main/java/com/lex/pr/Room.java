@@ -19,7 +19,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.CountDownLatch;
 
 public class Room implements Closeable {
 	private final Logger log = LoggerFactory.getLogger(Room.class);
@@ -27,7 +26,7 @@ public class Room implements Closeable {
 	private final ConcurrentMap<String, UserSession> participants = new ConcurrentHashMap<>();
 	private final MediaPipeline pipeline;
 	private final String name;
-	private final Composite composite;
+	private Composite composite;
 	private RecorderEndpoint recorderAudioEndpoint;
 	private RecorderEndpoint recorderVideoEndpoint;
 	private HubPort compositeOutputHubport;
@@ -42,8 +41,6 @@ public class Room implements Closeable {
 	public Room(String roomName, MediaPipeline pipeline) {
 		this.name = roomName;
 		this.pipeline = pipeline;
-		this.composite = new Composite.Builder(pipeline).build();
-		this.compositeOutputHubport = new HubPort.Builder(composite).build();
 		log.info("ROOM {} has been created", roomName);
 	}
 
@@ -128,6 +125,18 @@ public class Room implements Closeable {
 		participants.put(participant.getName(), participant);
 		sendParticipantNames(participant);
 		return participant;
+	}
+
+	public void start_record() {
+		this.recorderVideoEndpoint.record();
+		this.recorderAudioEndpoint.record();
+	}
+
+	public void stop_record(String name) throws IOException {
+		this.recorderVideoEndpoint.stop();
+		this.recorderAudioEndpoint.stop();
+		this.recorderVideoEndpoint.release();
+		this.recorderAudioEndpoint.release();
 	}
 
 	public void leave(UserSession user) throws IOException {

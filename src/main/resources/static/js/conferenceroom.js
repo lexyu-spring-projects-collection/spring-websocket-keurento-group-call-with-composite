@@ -61,10 +61,14 @@ function register() {
     document.getElementById('join').style.display = 'none';
     document.getElementById('room').style.display = 'block';
 
+    var disable_record = document.getElementById('disable_record').checked;
+    console.log("disable record = " + disable_record);
+
     var message = {
         id: 'joinRoom',
         name: name,
         room: room,
+        disable_record: !disable_record,
     }
     sendMessage(message);
 }
@@ -93,6 +97,7 @@ function callResponse(message) {
 function onExistingParticipants(msg) {
     var constraints = {
         audio: true,
+        // video: true,
         video: {
             mandatory: {
                 width: 1280,
@@ -154,6 +159,27 @@ function leaveRoom() {
     ws.close();
 }
 
+function startRecord() {
+    name = document.getElementById('name').value;
+    var room = document.getElementById('room-header').innerText;
+    console.log("Room Name = " + room)
+    sendMessage({
+        id: 'startRecord',
+        name: name,
+        room: room.charAt(5),
+    });
+}
+
+function stopRecord() {
+    name = document.getElementById('name').value;
+    var room = document.getElementById('room-header').innerText;
+    sendMessage({
+        id: 'stopRecord',
+        name: name,
+        room: room.charAt(5),
+    });
+}
+
 function receiveVideo(sender) {
     var participant = new Participant(sender);
     participants[sender] = participant;
@@ -186,3 +212,6 @@ function sendMessage(message) {
     console.log('Sending message: ' + jsonMessage);
     ws.send(jsonMessage);
 }
+
+
+

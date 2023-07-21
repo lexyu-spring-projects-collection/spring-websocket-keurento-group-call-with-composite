@@ -22,11 +22,18 @@
                     <input type="text" name="room" value="" id="roomName"
                            placeholder="Room" required>
                 </p>
+
                 <h3>Select an option:</h3>
+
                 <input type="checkbox" id="open_video">
                 <label for="open_video">Disable Video</label><br>
+
                 <input type="checkbox" id="open_audio">
                 <label for="open_audio">Disable Audio</label><br>
+
+                <input type="checkbox" id="disable_record">
+                <label for="disable_record">Disable Recording</label><br>
+
                 <p class="submit">
                     <input type="submit" name="commit" value="Join!">
                 </p>
@@ -35,6 +42,10 @@
         <div id="room" style="display: none;">
             <h2 id="room-header"></h2>
             <div id="participants"></div>
+            <input type="button" id="button-start-record" onmouseup="startRecord();"
+                   value="Start record">
+            <input type="button" id="button-stop-record" onmouseup="stopRecord();"
+                   value="Stop record">
             <input type="button" id="button-leave" onmouseup="leaveRoom();"
                    value="Leave room">
         </div>
