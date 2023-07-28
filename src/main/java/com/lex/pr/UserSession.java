@@ -71,8 +71,7 @@ public class UserSession implements Closeable {
 	}
 
 	public UserSession(final String name, String roomName, final WebSocketSession session,
-	                   MediaPipeline pipeline, final Hub composite, final HubPort compositeOutputHubPort) {
-
+	                   MediaPipeline pipeline, final Hub composite) {
 		this.pipeline = pipeline;
 		this.name = name;
 		this.session = session;
@@ -81,7 +80,7 @@ public class UserSession implements Closeable {
 		this.compositeInputHubPort = new HubPort.Builder(composite).build();
 		this.outgoingMedia.connect(this.compositeInputHubPort, MediaType.AUDIO);
 
-		this.compositeOutputHubPort = compositeOutputHubPort;
+//		this.compositeOutputHubPort = compositeOutputHubPort;
 
 		this.outgoingMedia.addIceCandidateFoundListener(new EventListener<IceCandidateFoundEvent>() {
 			@Override

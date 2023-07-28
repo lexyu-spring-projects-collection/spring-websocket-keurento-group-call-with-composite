@@ -41,6 +41,8 @@ public class Room implements Closeable {
 	public Room(String roomName, MediaPipeline pipeline) {
 		this.name = roomName;
 		this.pipeline = pipeline;
+		this.composite = new Composite.Builder(pipeline).build();
+		this.compositeOutputHubport = new HubPort.Builder(composite).build();
 		log.info("ROOM {} has been created", roomName);
 	}
 
@@ -51,8 +53,7 @@ public class Room implements Closeable {
 
 	public UserSession join(String userName, WebSocketSession session) throws IOException {
 		log.info("ROOM {}: adding participant {}", this.name, userName);
-		final UserSession participant = new UserSession(userName, this.name, session, this.pipeline,
-				this.composite, this.compositeOutputHubport);
+		final UserSession participant = new UserSession(userName, this.name, session, this.pipeline, this.composite);
 
 		if (participants.size() == 0) {
 			this.recorderAudioEndpoint = new RecorderEndpoint.Builder(this.pipeline,
@@ -118,8 +119,8 @@ public class Room implements Closeable {
 
 			});
 
-			this.recorderVideoEndpoint.record();
-			this.recorderAudioEndpoint.record();
+//			this.recorderVideoEndpoint.record();
+//			this.recorderAudioEndpoint.record();
 		}
 		joinRoom(participant);
 		participants.put(participant.getName(), participant);
